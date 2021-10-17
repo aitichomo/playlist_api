@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="apiicon.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <title>API APPLICATON</title>
+</head>
+
+<style>
+    div {
+        cursor: pointer;
+    }
+    
+    body {
+        background-image: url("body-backgrounds.jpg");
+    }
+</style>
+</head>
+
+<body>
+
+
+    <div class="container" style="max-width: 720px; text-align: center;">
+
+
+        <iframe id="player" width="100%" src="https://www.youtube.com/embed/Xn9yiZRg4m4?rel=0" frameborder="0" allow="accelerometer; autoplay; 
+      encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+        <main id="content">
+
+        </main>
+
+    </div>
+    <script>
+        const url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=PLMTdZ61eBnyp1nMM8mGRzpwuu6FNxFy0D&maxResults=50&key=AIzaSyAaRjH-yWMxGLPBOvDdqkGjTn84-wqY--o";
+        fetch(url).then(response => {
+            return response.json()
+        }).then(data => {
+
+            getData(data.items);
+
+        }).catch(error => {
+            // هنا نضع اوامر الذي نرغب بتنفيذها عند حدوث خطا اثناء استرداد بيانات من  API
+
+            console.log(error); // هنا طلبنا بعر ض الخطا الذي حدث اثناء استرداد البيانات 
+        })
+
+
+        function getData(data) {
+            console.log(data);
+            data.forEach(element => {
+                var title = element.snippet.title;
+                var videoId = element.snippet.resourceId.videoId;
+                var img = element.snippet.thumbnails.standard.url;
+                var description = element.snippet.description;
+
+                document.getElementById("content").innerHTML +=
+                    '<div class="card-header shadow p-3 mb-5 bg-white rounded" onclick="loadVideo(\'' + videoId + '\')"> ' + title + '</div>'
+
+                ;
+
+                ;
+            });
+        }
+
+
+        function loadVideo(videoId) {
+            document.getElementById("player").src = "https://www.youtube.com/embed/" + videoId + "?showinfo=0; rel=0;";
+
+
+        }
+
+
+
+
+        setInterval(function() {
+            document.getElementById("player").style.height =
+                document.getElementById("player").getBoundingClientRect().width * 0.5625 + "px";
+
+        }, 1000);
+    </script>
+</body>
+
+</html>
